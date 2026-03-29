@@ -1,0 +1,36 @@
+@import 'tailwindcss';
+@source "../app";
+@source "../components";
+@source "../lib";
+@source not "../Master Skillset web design";
+@source not "../website design complete SOP";
+@source not "../.config";
+@source not "../.local";
+@source not "../.cache";
+
+:root {
+  color-scheme: light;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100vh;
+  background: #ffffff;
+  color: #0f172a;
+  font-family: var(--font-body), sans-serif;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+.font-display {
+  font-family: var(--font-display), var(--font-body), sans-serif;
+}
+
+::selection {
+  background: rgba(125, 211, 252, 0.45);
+  color: #0f172a;
+}

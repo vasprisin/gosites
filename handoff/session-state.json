@@ -1,0 +1,138 @@
+{
+  "savedAt": "2026-03-27T19:05:50.819Z",
+  "project": {
+    "root": "/home/runner/workspace",
+    "packageManager": "npm",
+    "scripts": {
+      "dev": "next dev",
+      "build": "next build",
+      "start": "next start",
+      "session:save": "node scripts/save-session.mjs",
+      "session:restore": "node scripts/restore-session.mjs"
+    },
+    "dependencies": {
+      "@radix-ui/react-accordion": "^1.2.12",
+      "@radix-ui/react-avatar": "^1.1.11",
+      "@radix-ui/react-dialog": "^1.1.15",
+      "@radix-ui/react-dropdown-menu": "^2.1.16",
+      "@radix-ui/react-label": "^2.1.8",
+      "@radix-ui/react-navigation-menu": "^1.2.14",
+      "@radix-ui/react-separator": "^1.1.8",
+      "@radix-ui/react-slot": "^1.2.4",
+      "@radix-ui/react-tabs": "^1.1.13",
+      "@radix-ui/react-tooltip": "^1.2.8",
+      "@tailwindcss/postcss": "^4.2.2",
+      "class-variance-authority": "^0.7.1",
+      "clsx": "^2.1.1",
+      "framer-motion": "^12.38.0",
+      "lucide-react": "^1.7.0",
+      "next": "^16.2.1",
+      "react": "^19.2.4",
+      "react-dom": "^19.2.4",
+      "tailwind-merge": "^3.5.0",
+      "tailwindcss": "^4.2.2"
+    }
+  },
+  "recovery": {
+    "summaryPath": "handoff/CURRENT_STATE.md",
+    "checklist": [
+      "- [x] Confirm no previous handoff or chat transcript was saved in the workspace",
+      "- [x] Add a disk-based handoff system that future sessions can read",
+      "- [x] Add scripts to save and restore session context from the workspace",
+      "- [ ] Update this file whenever major work is completed",
+      "- [ ] Re-run `npm run session:save` after meaningful changes so `handoff/session-state.json` stays current"
+    ]
+  },
+  "app": {
+    "keyFiles": [
+      "app/api/enquiry/route.js",
+      "app/globals.css",
+      "app/layout.js",
+      "app/page.js"
+    ],
+    "componentFiles": [
+      "components/sections/FAQ.jsx",
+      "components/sections/FinalCTA.jsx",
+      "components/sections/Footer.jsx",
+      "components/sections/Header.jsx",
+      "components/sections/Hero.jsx",
+      "components/sections/Pricing.jsx",
+      "components/sections/Process.jsx",
+      "components/sections/Services.jsx",
+      "components/sections/Team.jsx",
+      "components/sections/TrustStrip.jsx",
+      "components/sections/WhyUs.jsx",
+      "components/ui/Badge.jsx",
+      "components/ui/Button.jsx",
+      "components/ui/Card.jsx",
+      "components/ui/Container.jsx",
+      "components/ui/Heading.jsx",
+      "components/ui/Section.jsx"
+    ],
+    "libFiles": [
+      "lib/content.js",
+      "lib/motion.js",
+      "lib/utils.js"
+    ]
+  },
+  "env": {
+    "exampleKeys": [
+      "BREVO_API_KEY",
+      "BREVO_SENDER_EMAIL",
+      "BREVO_SENDER_NAME",
+      "BREVO_CONFIRM_TEMPLATE_ID",
+      "BREVO_NEWSLETTER_LIST_ID",
+      "NEXT_PUBLIC_CALENDLY_URL"
+    ]
+  },
+  "recentFiles": [
+    {
+      "path": "scripts/restore-session.mjs",
+      "modifiedAt": "2026-03-27T19:05:46.211Z"
+    },
+    {
+      "path": "scripts/save-session.mjs",
+      "modifiedAt": "2026-03-27T19:05:46.210Z"
+    },
+    {
+      "path": "components/sections/Header.jsx",
+      "modifiedAt": "2026-03-27T18:13:53.348Z"
+    },
+    {
+      "path": "components/sections/FinalCTA.jsx",
+      "modifiedAt": "2026-03-27T18:13:48.387Z"
+    },
+    {
+      "path": "app/api/enquiry/route.js",
+      "modifiedAt": "2026-03-27T18:11:45.024Z"
+    },
+    {
+      "path": "app/page.js",
+      "modifiedAt": "2026-03-27T16:02:31.405Z"
+    },
+    {
+      "path": "components/sections/Team.jsx",
+      "modifiedAt": "2026-03-27T16:02:31.405Z"
+    },
+    {
+      "path": "lib/content.js",
+      "modifiedAt": "2026-03-27T16:02:31.405Z"
+    },
+    {
+      "path": "components/sections/Process.jsx",
+      "modifiedAt": "2026-03-27T16:00:51.202Z"
+    },
+    {
+      "path": "components/sections/Services.jsx",
+      "modifiedAt": "2026-03-27T16:00:37.473Z"
+    },
+    {
+      "path": "components/sections/TrustStrip.jsx",
+      "modifiedAt": "2026-03-27T16:00:13.605Z"
+    },
+    {
+      "path": "components/sections/FAQ.jsx",
+      "modifiedAt": "2026-03-27T15:59:11.870Z"
+    }
+  ]
+}
