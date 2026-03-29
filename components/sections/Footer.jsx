@@ -28,10 +28,10 @@ export default function Footer() {
           <div className="grid gap-10 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:items-end">
             <motion.div variants={fadeUp} className="space-y-5">
               <div className="space-y-3">
-                <span className="block font-display text-2xl tracking-[-0.04em] text-slate-950">
+                <span className="block font-display text-[2rem] tracking-[-0.04em] text-slate-950 sm:text-[2.2rem]">
                   {site.name}
                 </span>
-                <p className="max-w-md text-base leading-7 text-slate-600">
+                <p className="max-w-md text-[1.05rem] leading-8 text-slate-700">
                   {site.description}
                 </p>
               </div>
@@ -70,7 +70,7 @@ export default function Footer() {
             >
               {footerGroups.map((group) => (
                 <div key={group.title}>
-                  <p className="mb-4 text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">
+                  <p className="mb-4 text-sm font-bold uppercase tracking-[0.2em] text-slate-900">
                     {group.title}
                   </p>
                   <div className="flex flex-col gap-3">
@@ -78,7 +78,7 @@ export default function Footer() {
                       <a
                         key={`${group.title}-${link.label}`}
                         href={link.href}
-                        className="text-sm text-slate-600 transition-colors hover:text-slate-950"
+                        className="text-base text-slate-700 transition-colors hover:text-slate-950"
                       >
                         {link.label}
                       </a>
@@ -93,18 +93,18 @@ export default function Footer() {
             variants={fadeUp}
             className="mt-10 border-t border-slate-200 pt-6 text-center"
           >
-            <p className="text-base font-semibold tracking-[-0.01em] text-slate-950">
+            <p className="text-lg font-bold tracking-[-0.01em] text-slate-950">
               {site.madeIn}
             </p>
             <div className="mx-auto mt-3 max-w-3xl rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-500">
+              <p className="text-xs font-bold uppercase tracking-[0.2em] text-slate-600">
                 Disclaimer
               </p>
-              <p className="mt-2 text-sm leading-6 text-slate-700">
+              <p className="mt-2 text-base leading-7 text-slate-700">
                 {footerDisclaimer}
               </p>
             </div>
-            <p className="mt-2 text-sm text-slate-500">{site.copyright}</p>
+            <p className="mt-3 text-base text-slate-600">{site.copyright}</p>
           </motion.div>
         </motion.div>
       </Container>
