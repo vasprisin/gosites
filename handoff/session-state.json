@@ -1,5 +1,5 @@
 {
-  "savedAt": "2026-03-27T19:05:50.819Z",
+  "savedAt": "2026-03-31T16:27:02.342Z",
   "project": {
     "root": "/home/runner/workspace",
     "packageManager": "npm",
@@ -39,38 +39,55 @@
       "- [x] Confirm no previous handoff or chat transcript was saved in the workspace",
       "- [x] Add a disk-based handoff system that future sessions can read",
       "- [x] Add scripts to save and restore session context from the workspace",
-      "- [ ] Update this file whenever major work is completed",
-      "- [ ] Re-run `npm run session:save` after meaningful changes so `handoff/session-state.json` stays current"
+      "- [x] Update this file whenever major work is completed",
+      "- [x] Re-run `npm run session:save` after meaningful changes so `handoff/session-state.json` stays current",
+      "- [ ] Add the `BREVO_NEWSLETTER_LIST_ID` runtime secret so the now-wired newsletter opt-in can actually sync contacts into Brevo",
+      "- [ ] Restart Codex so the newly added `posthog` MCP server is available to the tool layer if PostHog access is still needed",
+      "- [ ] Complete the active Railway browserless login at `https://railway.com/activate` with code `DVFK-DPTT`, then investigate Railway custom-domain SSL from the re-authenticated session"
     ]
   },
   "app": {
     "keyFiles": [
+      "app/api/contact/route.js",
       "app/api/enquiry/route.js",
       "app/globals.css",
       "app/layout.js",
       "app/page.js"
     ],
     "componentFiles": [
+      "components/sections/CTABanner.jsx",
+      "components/sections/ContactSection.jsx",
+      "components/sections/EnquiryForm.jsx",
       "components/sections/FAQ.jsx",
       "components/sections/FinalCTA.jsx",
       "components/sections/Footer.jsx",
+      "components/sections/FounderNote.jsx",
+      "components/sections/GalleryProof.jsx",
+      "components/sections/GetStarted.jsx",
       "components/sections/Header.jsx",
       "components/sections/Hero.jsx",
+      "components/sections/HowWeWork.jsx",
       "components/sections/Pricing.jsx",
       "components/sections/Process.jsx",
       "components/sections/Services.jsx",
+      "components/sections/SocialProof.jsx",
       "components/sections/Team.jsx",
+      "components/sections/TopBanner.jsx",
       "components/sections/TrustStrip.jsx",
+      "components/sections/VSL.jsx",
+      "components/sections/WhyDifferent.jsx",
       "components/sections/WhyUs.jsx",
       "components/ui/Badge.jsx",
       "components/ui/Button.jsx",
       "components/ui/Card.jsx",
       "components/ui/Container.jsx",
       "components/ui/Heading.jsx",
-      "components/ui/Section.jsx"
+      "components/ui/Section.jsx",
+      "components/ui/WhatsappWidget.jsx"
     ],
     "libFiles": [
       "lib/content.js",
+      "lib/form-submissions.js",
       "lib/motion.js",
       "lib/utils.js"
     ]
@@ -78,61 +95,66 @@
   "env": {
     "exampleKeys": [
       "BREVO_API_KEY",
+      "BREVO_TOKEN",
       "BREVO_SENDER_EMAIL",
+      "BREVO_SENDER",
       "BREVO_SENDER_NAME",
       "BREVO_CONFIRM_TEMPLATE_ID",
       "BREVO_NEWSLETTER_LIST_ID",
+      "AIRTABLE_PAT",
+      "AIRTABLE_BASE_ID",
+      "AIRTABLE_TABLE_ID",
       "NEXT_PUBLIC_CALENDLY_URL"
     ]
   },
   "recentFiles": [
     {
-      "path": "scripts/restore-session.mjs",
-      "modifiedAt": "2026-03-27T19:05:46.211Z"
-    },
-    {
-      "path": "scripts/save-session.mjs",
-      "modifiedAt": "2026-03-27T19:05:46.210Z"
-    },
-    {
-      "path": "components/sections/Header.jsx",
-      "modifiedAt": "2026-03-27T18:13:53.348Z"
-    },
-    {
-      "path": "components/sections/FinalCTA.jsx",
-      "modifiedAt": "2026-03-27T18:13:48.387Z"
+      "path": "components/sections/EnquiryForm.jsx",
+      "modifiedAt": "2026-03-31T16:26:00.503Z"
     },
     {
       "path": "app/api/enquiry/route.js",
-      "modifiedAt": "2026-03-27T18:11:45.024Z"
+      "modifiedAt": "2026-03-31T16:26:00.500Z"
     },
     {
-      "path": "app/page.js",
-      "modifiedAt": "2026-03-27T16:02:31.405Z"
+      "path": "components/sections/ContactSection.jsx",
+      "modifiedAt": "2026-03-31T16:26:00.500Z"
     },
     {
-      "path": "components/sections/Team.jsx",
-      "modifiedAt": "2026-03-27T16:02:31.405Z"
+      "path": "app/api/contact/route.js",
+      "modifiedAt": "2026-03-31T16:26:00.499Z"
+    },
+    {
+      "path": "lib/form-submissions.js",
+      "modifiedAt": "2026-03-31T16:26:00.498Z"
+    },
+    {
+      "path": "components/sections/FinalCTA.jsx",
+      "modifiedAt": "2026-03-30T15:23:42.172Z"
+    },
+    {
+      "path": "components/sections/Header.jsx",
+      "modifiedAt": "2026-03-29T22:14:05.778Z"
+    },
+    {
+      "path": "components/sections/Footer.jsx",
+      "modifiedAt": "2026-03-29T20:36:34.233Z"
+    },
+    {
+      "path": "components/sections/WhyDifferent.jsx",
+      "modifiedAt": "2026-03-29T20:34:45.882Z"
+    },
+    {
+      "path": "components/sections/FounderNote.jsx",
+      "modifiedAt": "2026-03-29T20:33:58.253Z"
     },
     {
       "path": "lib/content.js",
-      "modifiedAt": "2026-03-27T16:02:31.405Z"
+      "modifiedAt": "2026-03-29T20:32:38.582Z"
     },
     {
-      "path": "components/sections/Process.jsx",
-      "modifiedAt": "2026-03-27T16:00:51.202Z"
-    },
-    {
-      "path": "components/sections/Services.jsx",
-      "modifiedAt": "2026-03-27T16:00:37.473Z"
-    },
-    {
-      "path": "components/sections/TrustStrip.jsx",
-      "modifiedAt": "2026-03-27T16:00:13.605Z"
-    },
-    {
-      "path": "components/sections/FAQ.jsx",
-      "modifiedAt": "2026-03-27T15:59:11.870Z"
+      "path": "components/sections/Hero.jsx",
+      "modifiedAt": "2026-03-29T20:32:08.777Z"
     }
   ]
 }

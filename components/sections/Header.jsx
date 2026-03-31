@@ -24,16 +24,16 @@ export default function Header() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
-  const shellPaddingY = 14 - scrollProgress * 4
+  const shellPaddingY = 11 - scrollProgress * 3
   const shellPaddingX = 18 - scrollProgress * 4
   const shellRadius = 999
-  const logoSize = 46 - scrollProgress * 8
+  const logoSize = 42 - scrollProgress * 6
   const logoRadius = 20 - scrollProgress * 4
-  const navPaddingY = 8 - scrollProgress * 2
+  const navPaddingY = 6 - scrollProgress * 2
   const navPaddingX = 8 - scrollProgress * 2
   const navGap = 4 - scrollProgress * 1
   const navItemPaddingX = 16 - scrollProgress * 3
-  const navItemPaddingY = 8 - scrollProgress * 2
+  const navItemPaddingY = 7 - scrollProgress * 2
   const actionGap = 12 - scrollProgress * 4
   const outerY = scrollProgress * 2
 
@@ -45,7 +45,7 @@ export default function Header() {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
     >
-      <Container className="pt-3 sm:pt-4">
+      <Container className="pt-2 sm:pt-3">
         <motion.div
           style={{ y: outerY }}
           className="mx-auto w-full"

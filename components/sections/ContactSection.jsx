@@ -20,6 +20,7 @@ const initialForm = {
   websiteUrl: '',
   messageTitle: '',
   messageBody: '',
+  subscribe: false,
 }
 
 function Field({ label, required = false, hint, children }) {
@@ -195,115 +196,136 @@ export default function ContactSection() {
               variants={scaleIn}
             >
               <form className="space-y-5" onSubmit={handleSubmit}>
-              <div className="grid gap-5 sm:grid-cols-2">
-                <Field label="First name" required>
-                  <Input
-                    name="firstName"
-                    autoComplete="given-name"
-                    placeholder="Alex"
-                    value={form.firstName}
-                    onChange={(event) => updateField('firstName', event.target.value)}
-                  />
-                </Field>
+                <div className="grid gap-5 sm:grid-cols-2">
+                  <Field label="First name" required>
+                    <Input
+                      name="firstName"
+                      autoComplete="given-name"
+                      placeholder="Alex"
+                      value={form.firstName}
+                      onChange={(event) =>
+                        updateField('firstName', event.target.value)
+                      }
+                    />
+                  </Field>
 
-                <Field label="Email" required>
-                  <Input
-                    name="email"
-                    type="email"
-                    autoComplete="email"
-                    placeholder="alex@business.com"
-                    value={form.email}
-                    onChange={(event) => updateField('email', event.target.value)}
-                  />
-                </Field>
-              </div>
-
-              <Field label="Phone" required>
-                <Input
-                  name="phone"
-                  type="tel"
-                  autoComplete="tel"
-                  placeholder="+44 7..."
-                  value={form.phone}
-                  onChange={(event) => updateField('phone', event.target.value)}
-                />
-              </Field>
-
-              <Field
-                label="LinkedIn profile URL"
-                hint="Optional. Add your profile or company page if relevant."
-              >
-                <Input
-                  name="linkedinUrl"
-                  type="url"
-                  placeholder="https://www.linkedin.com/in/..."
-                  value={form.linkedinUrl}
-                  onChange={(event) =>
-                    updateField('linkedinUrl', event.target.value)
-                  }
-                />
-              </Field>
-
-              <Field
-                label="Company website"
-                hint="Optional. Add your current site if you already have one."
-              >
-                <Input
-                  name="websiteUrl"
-                  type="url"
-                  placeholder="https://example.com"
-                  value={form.websiteUrl}
-                  onChange={(event) => updateField('websiteUrl', event.target.value)}
-                />
-              </Field>
-
-              <Field label="Message title" required>
-                <Input
-                  name="messageTitle"
-                  placeholder="Tell us what you need"
-                  value={form.messageTitle}
-                  onChange={(event) =>
-                    updateField('messageTitle', event.target.value)
-                  }
-                />
-              </Field>
-
-              <Field label="Message body" required>
-                <Textarea
-                  name="messageBody"
-                  placeholder="Share the details, timeline, and anything else we should know."
-                  value={form.messageBody}
-                  onChange={(event) =>
-                    updateField('messageBody', event.target.value)
-                  }
-                />
-              </Field>
-
-              {error ? (
-                <div className="rounded-[1.25rem] border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
-                  {error}
+                  <Field label="Email" required>
+                    <Input
+                      name="email"
+                      type="email"
+                      autoComplete="email"
+                      placeholder="alex@business.com"
+                      value={form.email}
+                      onChange={(event) =>
+                        updateField('email', event.target.value)
+                      }
+                    />
+                  </Field>
                 </div>
-              ) : null}
 
-              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                <Button type="submit" disabled={status === 'submitting'}>
-                  {status === 'submitting' ? (
-                    <>
-                      <LoaderCircle className="h-4 w-4 animate-spin" />
-                      Sending
-                    </>
-                  ) : (
-                    <>
-                      Submit enquiry
-                      <ArrowRight className="h-4 w-4" />
-                    </>
-                  )}
-                </Button>
+                <Field label="Phone" required>
+                  <Input
+                    name="phone"
+                    type="tel"
+                    autoComplete="tel"
+                    placeholder="+44 7..."
+                    value={form.phone}
+                    onChange={(event) => updateField('phone', event.target.value)}
+                  />
+                </Field>
 
-                <p className="text-xs uppercase tracking-[0.18em] text-slate-500">
-                  General enquiries only.
-                </p>
-              </div>
+                <Field
+                  label="LinkedIn profile URL"
+                  hint="Optional. Add your profile or company page if relevant."
+                >
+                  <Input
+                    name="linkedinUrl"
+                    type="url"
+                    placeholder="https://www.linkedin.com/in/..."
+                    value={form.linkedinUrl}
+                    onChange={(event) =>
+                      updateField('linkedinUrl', event.target.value)
+                    }
+                  />
+                </Field>
+
+                <Field
+                  label="Company website"
+                  hint="Optional. Add your current site if you already have one."
+                >
+                  <Input
+                    name="websiteUrl"
+                    type="url"
+                    placeholder="https://example.com"
+                    value={form.websiteUrl}
+                    onChange={(event) =>
+                      updateField('websiteUrl', event.target.value)
+                    }
+                  />
+                </Field>
+
+                <Field label="Message title" required>
+                  <Input
+                    name="messageTitle"
+                    placeholder="Tell us what you need"
+                    value={form.messageTitle}
+                    onChange={(event) =>
+                      updateField('messageTitle', event.target.value)
+                    }
+                  />
+                </Field>
+
+                <Field label="Message body" required>
+                  <Textarea
+                    name="messageBody"
+                    placeholder="Share the details, timeline, and anything else we should know."
+                    value={form.messageBody}
+                    onChange={(event) =>
+                      updateField('messageBody', event.target.value)
+                    }
+                  />
+                </Field>
+
+                <label className="flex items-start gap-3 rounded-[1.5rem] border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700">
+                  <input
+                    name="subscribe"
+                    type="checkbox"
+                    className="mt-1 h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
+                    checked={form.subscribe}
+                    onChange={(event) =>
+                      updateField('subscribe', event.target.checked)
+                    }
+                  />
+                  <span className="leading-6">
+                    Email me occasional website and growth updates. Optional.
+                  </span>
+                </label>
+
+                {error ? (
+                  <div className="rounded-[1.25rem] border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
+                    {error}
+                  </div>
+                ) : null}
+
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                  <Button type="submit" disabled={status === 'submitting'}>
+                    {status === 'submitting' ? (
+                      <>
+                        <LoaderCircle className="h-4 w-4 animate-spin" />
+                        Sending
+                      </>
+                    ) : (
+                      <>
+                        Submit enquiry
+                        <ArrowRight className="h-4 w-4" />
+                      </>
+                    )}
+                  </Button>
+
+                  <p className="text-xs uppercase tracking-[0.18em] text-slate-500">
+                    General enquiries only.
+                  </p>
+                </div>
               </form>
             </motion.div>
           </div>

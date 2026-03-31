@@ -13,24 +13,20 @@ import { cn } from '@/lib/utils'
 
 const situationOptions = [
   {
-    value: 'no-website',
+    value: 'brand-new-website',
     label: 'I do not have a website',
   },
   {
-    value: 'unhappy-with-current',
+    value: 'existing-website',
     label: 'I have a website but I am not happy with it',
-  },
-  {
-    value: 'other',
-    label: 'Other',
   },
 ]
 
 const timelineOptions = [
   { value: 'right-away', label: 'Right away' },
   { value: 'within-a-week', label: 'Within a week' },
-  { value: 'within-a-month', label: 'Within a month' },
-  { value: 'after-30-days', label: 'After 30 days' },
+  { value: 'within-this-month', label: 'Within this month' },
+  { value: 'next-month', label: 'Next month' },
 ]
 
 const quickStartTimelines = new Set(['right-away', 'within-a-week'])
@@ -40,9 +36,8 @@ const initialForm = {
   email: '',
   wantsPhoneCallback: false,
   phone: '',
-  subscribe: false,
   situation: '',
-  otherDetails: '',
+  websiteUrl: '',
   startTimeline: '',
 }
 
@@ -149,8 +144,8 @@ export default function FinalCTA() {
         return 'Please choose the option that fits best.'
       }
 
-      if (form.situation === 'other' && !form.otherDetails.trim()) {
-        return 'Please tell us a bit more.'
+      if (form.situation === 'existing-website' && !form.websiteUrl.trim()) {
+        return 'Please add your current website address.'
       }
     }
 
@@ -199,9 +194,8 @@ export default function FinalCTA() {
           firstName: form.firstName,
           email: form.email,
           phone: form.wantsPhoneCallback ? form.phone : '',
-          subscribe: form.subscribe,
           situation: form.situation,
-          otherDetails: form.otherDetails,
+          websiteUrl: form.websiteUrl,
           startTimeline: form.startTimeline,
         }),
       })
@@ -209,7 +203,7 @@ export default function FinalCTA() {
       const data = await response.json()
 
       if (!response.ok) {
-        throw new Error(data.message || 'Unable to submit enquiry right now.')
+        throw new Error(data.message || 'Unable to submit service request right now.')
       }
 
       setSubmittedTimeline(form.startTimeline)
@@ -219,7 +213,7 @@ export default function FinalCTA() {
       setError(
         submissionError instanceof Error
           ? submissionError.message
-          : 'Unable to submit enquiry right now.'
+          : 'Unable to submit service request right now.'
       )
     }
   }
@@ -250,9 +244,9 @@ export default function FinalCTA() {
           <div className="grid gap-10 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:items-start">
             <motion.div className="space-y-8" variants={fadeUp}>
               <Heading
-                eyebrow="Enquiries"
+                eyebrow="Service Request"
                 title="Tell us where you are now and how fast you want to move."
-                description="Use the short form to send an enquiry. Fast-start projects can go straight to a call once submitted."
+                description="Use the short form to send a service request. Fast-start projects can go straight to a call once submitted."
                 titleClassName="max-w-3xl"
                 descriptionClassName="max-w-xl"
               />
@@ -295,12 +289,12 @@ export default function FinalCTA() {
                         <CheckCircle2 className="mt-0.5 h-5 w-5 text-emerald-600" />
                         <div className="space-y-2">
                           <p className="text-base font-semibold text-slate-950">
-                            Enquiry received
+                            Service request received
                           </p>
                           <p className="text-sm leading-7 text-slate-700">
                             {showCalendly && calendlyUrl
                               ? 'Everything checks out so far. Pick a time below and we can move this forward quickly.'
-                              : 'Thank you for your enquiry. Our team will reach out to you within 24 hours.'}
+                              : 'Thank you for your service request. Our team will reach out to you within 24 hours.'}
                           </p>
                         </div>
                       </div>
@@ -379,7 +373,7 @@ export default function FinalCTA() {
                             className="mt-1 h-4 w-4 rounded border-slate-300 bg-transparent text-sky-600"
                           />
                           <span className="text-sm leading-6 text-slate-700">
-                            I want a phone callback as part of the enquiry.
+                            I want a phone callback as part of this service request.
                           </span>
                         </label>
 
@@ -402,19 +396,6 @@ export default function FinalCTA() {
                           </Field>
                         ) : null}
 
-                        <label className="flex items-start gap-3 rounded-[1.25rem] border border-slate-200 bg-slate-50 px-4 py-3">
-                          <input
-                            type="checkbox"
-                            checked={form.subscribe}
-                            onChange={(event) =>
-                              updateField('subscribe', event.target.checked)
-                            }
-                            className="mt-1 h-4 w-4 rounded border-slate-300 bg-transparent text-sky-600"
-                          />
-                          <span className="text-sm leading-6 text-slate-700">
-                            Subscribe to the email newsletter.
-                          </span>
-                        </label>
                       </div>
                     ) : null}
 
@@ -435,14 +416,19 @@ export default function FinalCTA() {
                           ))}
                         </div>
 
-                        {form.situation === 'other' ? (
-                          <Field label="Mention below" required>
-                            <Textarea
-                              name="otherDetails"
-                              placeholder="Tell us what is different about your situation."
-                              value={form.otherDetails}
+                        {form.situation === 'existing-website' ? (
+                          <Field
+                            label="Current website"
+                            required
+                            hint="Add the website you want us to review."
+                          >
+                            <Input
+                              name="websiteUrl"
+                              type="url"
+                              placeholder="https://example.com"
+                              value={form.websiteUrl}
                               onChange={(event) =>
-                                updateField('otherDetails', event.target.value)
+                                updateField('websiteUrl', event.target.value)
                               }
                             />
                           </Field>
@@ -503,7 +489,7 @@ export default function FinalCTA() {
                               </>
                             ) : (
                               <>
-                                Submit enquiry
+                                Submit service request
                                 <ArrowRight className="h-4 w-4" />
                               </>
                             )}

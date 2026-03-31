@@ -34,6 +34,7 @@ const initialForm = {
   situation: '',
   websiteUrl: '',
   startTimeline: '',
+  subscribe: false,
 }
 
 function ChoiceCard({ checked, label, onClick }) {
@@ -162,6 +163,7 @@ export default function EnquiryForm() {
           situation: form.situation,
           websiteUrl: form.websiteUrl,
           startTimeline: form.startTimeline,
+          subscribe: form.subscribe,
         }),
       })
 
@@ -341,6 +343,19 @@ export default function EnquiryForm() {
               />
             ))}
           </div>
+
+          <label className="flex items-start gap-3 rounded-[1.5rem] border border-slate-200 bg-slate-50 px-4 py-4 text-sm text-slate-700">
+            <input
+              name="subscribe"
+              type="checkbox"
+              className="mt-1 h-4 w-4 rounded border-slate-300 text-sky-600 focus:ring-sky-500"
+              checked={form.subscribe}
+              onChange={(event) => updateField('subscribe', event.target.checked)}
+            />
+            <span className="leading-6">
+              Email me occasional website and growth updates. Optional.
+            </span>
+          </label>
         </div>
       ) : null}
 

@@ -1,91 +1,19 @@
-const BREVO_API_BASE = 'https://api.brevo.com/v3'
+import {
+  assertNotSkipped,
+  createAirtableSubmission,
+  isValidEmail,
+  isValidUrl,
+  logOptionalStepResult,
+  normalizeBoolean,
+  normalizeValue,
+  sendAutoReplyEmail,
+  serviceSituationLabelMap,
+  serviceTimelineLabelMap,
+  upsertBrevoContact,
+} from '@/lib/form-submissions'
 
 function json(data, init) {
   return Response.json(data, init)
-}
-
-function normalizeValue(value) {
-  return typeof value === 'string' ? value.trim() : ''
-}
-
-async function brevoRequest(path, body) {
-  const apiKey = process.env.BREVO_API_KEY
-
-  if (!apiKey) {
-    return { skipped: true, reason: 'missing_api_key' }
-  }
-
-  const response = await fetch(`${BREVO_API_BASE}${path}`, {
-    method: 'POST',
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-      'api-key': apiKey,
-    },
-    body: JSON.stringify(body),
-  })
-
-  if (!response.ok) {
-    const errorText = await response.text()
-    throw new Error(`${path} failed: ${response.status} ${errorText}`)
-  }
-
-  if (response.status === 204) {
-    return { ok: true }
-  }
-
-  return response.json()
-}
-
-async function sendConfirmationEmail({ email, firstName, startTimeline }) {
-  const templateId = Number(process.env.BREVO_CONFIRM_TEMPLATE_ID)
-  const senderEmail = process.env.BREVO_SENDER_EMAIL
-  const senderName = process.env.BREVO_SENDER_NAME ?? 'GoSites'
-
-  if (!templateId || !senderEmail) {
-    return { skipped: true, reason: 'missing_template_or_sender' }
-  }
-
-  return brevoRequest('/smtp/email', {
-    sender: {
-      email: senderEmail,
-      name: senderName,
-    },
-    to: [
-      {
-        email,
-        name: firstName || email,
-      },
-    ],
-    templateId,
-    params: {
-      firstName,
-      startTimeline,
-    },
-  })
-}
-
-async function upsertBrevoContact({ email, firstName, phone, subscribe }) {
-  const listId = Number(process.env.BREVO_NEWSLETTER_LIST_ID)
-
-  if (!subscribe || !listId) {
-    return { skipped: true, reason: 'not_subscribed_or_missing_list' }
-  }
-
-  const attributes = {
-    FIRSTNAME: firstName,
-  }
-
-  if (phone) {
-    attributes.SMS = phone
-  }
-
-  return brevoRequest('/contacts', {
-    email,
-    attributes,
-    listIds: [listId],
-    updateEnabled: true,
-  })
 }
 
 export async function POST(request) {
@@ -98,17 +26,37 @@ export async function POST(request) {
     const situation = normalizeValue(body.situation)
     const websiteUrl = normalizeValue(body.websiteUrl)
     const startTimeline = normalizeValue(body.startTimeline)
+    const subscribe = normalizeBoolean(body.subscribe)
 
-    if (!firstName || !email || !phone || !situation || !startTimeline) {
+    if (!firstName || !email || !situation || !startTimeline) {
       return json(
         { ok: false, message: 'Missing required fields.' },
         { status: 400 }
       )
     }
 
-    if (
-      !['existing-website', 'brand-new-website'].includes(situation)
-    ) {
+    if (!isValidEmail(email)) {
+      return json(
+        { ok: false, message: 'Please enter a valid email address.' },
+        { status: 400 }
+      )
+    }
+
+    if (!isValidUrl(linkedinUrl)) {
+      return json(
+        { ok: false, message: 'Please enter a valid LinkedIn URL.' },
+        { status: 400 }
+      )
+    }
+
+    if (!isValidUrl(websiteUrl)) {
+      return json(
+        { ok: false, message: 'Please enter a valid website URL.' },
+        { status: 400 }
+      )
+    }
+
+    if (!Object.hasOwn(serviceSituationLabelMap, situation)) {
       return json(
         { ok: false, message: 'Please choose a valid website situation.' },
         { status: 400 }
@@ -122,29 +70,55 @@ export async function POST(request) {
       )
     }
 
-    if (
-      ![
-        'right-away',
-        'within-a-week',
-        'within-this-month',
-        'next-month',
-      ].includes(startTimeline)
-    ) {
+    if (!Object.hasOwn(serviceTimelineLabelMap, startTimeline)) {
       return json(
         { ok: false, message: 'Please choose a valid start timeline.' },
         { status: 400 }
       )
     }
 
-    await Promise.all([
-      sendConfirmationEmail({ email, firstName, startTimeline }),
-      upsertBrevoContact({
+    const airtableFields = {
+      Name: firstName,
+      Email: email,
+      'Website Situation': serviceSituationLabelMap[situation],
+      'Start Timeline': serviceTimelineLabelMap[startTimeline],
+      Status: 'New',
+      'Submission Source': 'Website service request form',
+      form_name: 'service',
+    }
+
+    if (phone) {
+      airtableFields.Phone = phone
+    }
+
+    if (linkedinUrl) {
+      airtableFields['LinkedIn URL'] = linkedinUrl
+    }
+
+    if (websiteUrl) {
+      airtableFields['Website URL'] = websiteUrl
+    }
+
+    const airtableRecord = await createAirtableSubmission(airtableFields)
+
+    const autoReplyResult = await sendAutoReplyEmail({
+      email,
+      firstName,
+      formName: 'service',
+    })
+    assertNotSkipped(autoReplyResult, 'Service request auto-reply')
+
+    try {
+      const brevoContactResult = await upsertBrevoContact({
         email,
         firstName,
         phone,
-        subscribe: false,
-      }),
-    ])
+        subscribe,
+      })
+      logOptionalStepResult('Service request newsletter sync', brevoContactResult)
+    } catch (error) {
+      console.error('Service request newsletter sync failed', error)
+    }
 
     return json({
       ok: true,
@@ -156,13 +130,15 @@ export async function POST(request) {
         situation,
         websiteUrl,
         startTimeline,
+        subscribe,
       },
+      airtableRecordId: airtableRecord?.id ?? null,
     })
   } catch (error) {
-    console.error('Enquiry submission failed', error)
+    console.error('Service request submission failed', error)
 
     return json(
-      { ok: false, message: 'Unable to submit enquiry right now.' },
+      { ok: false, message: 'Unable to submit service request right now.' },
       { status: 500 }
     )
   }

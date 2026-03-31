@@ -1,26 +1,17 @@
+import {
+  assertNotSkipped,
+  createAirtableSubmission,
+  isValidEmail,
+  isValidUrl,
+  logOptionalStepResult,
+  normalizeBoolean,
+  normalizeValue,
+  sendAutoReplyEmail,
+  upsertBrevoContact,
+} from '@/lib/form-submissions'
+
 function json(data, init) {
   return Response.json(data, init)
-}
-
-function normalizeValue(value) {
-  return typeof value === 'string' ? value.trim() : ''
-}
-
-function isValidEmail(email) {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
-}
-
-function isValidUrl(value) {
-  if (!value) {
-    return true
-  }
-
-  try {
-    const url = new URL(value)
-    return url.protocol === 'http:' || url.protocol === 'https:'
-  } catch {
-    return false
-  }
 }
 
 export async function POST(request) {
@@ -34,6 +25,7 @@ export async function POST(request) {
     const websiteUrl = normalizeValue(body.websiteUrl)
     const messageTitle = normalizeValue(body.messageTitle)
     const messageBody = normalizeValue(body.messageBody)
+    const subscribe = normalizeBoolean(body.subscribe)
 
     if (!firstName || !email || !phone || !messageTitle || !messageBody) {
       return json(
@@ -63,6 +55,46 @@ export async function POST(request) {
       )
     }
 
+    const airtableFields = {
+      Name: firstName,
+      Email: email,
+      Phone: phone,
+      'Message Title': messageTitle,
+      'Message Body': messageBody,
+      Status: 'New',
+      'Submission Source': 'Website enquiry form',
+      form_name: 'enquiry',
+    }
+
+    if (linkedinUrl) {
+      airtableFields['LinkedIn URL'] = linkedinUrl
+    }
+
+    if (websiteUrl) {
+      airtableFields['Website URL'] = websiteUrl
+    }
+
+    const airtableRecord = await createAirtableSubmission(airtableFields)
+
+    const autoReplyResult = await sendAutoReplyEmail({
+      email,
+      firstName,
+      formName: 'enquiry',
+    })
+    assertNotSkipped(autoReplyResult, 'General enquiry auto-reply')
+
+    try {
+      const brevoContactResult = await upsertBrevoContact({
+        email,
+        firstName,
+        phone,
+        subscribe,
+      })
+      logOptionalStepResult('General enquiry newsletter sync', brevoContactResult)
+    } catch (error) {
+      console.error('General enquiry newsletter sync failed', error)
+    }
+
     console.info('General enquiry received', {
       firstName,
       email,
@@ -70,11 +102,15 @@ export async function POST(request) {
       linkedinUrl,
       websiteUrl,
       messageTitle,
+      subscribe,
+      airtableRecordId: airtableRecord?.id ?? null,
     })
 
     return json({
       ok: true,
-      message: 'We have received your message and will get back to you within 24 hours.',
+      message:
+        'We have received your message and will get back to you within 24 hours.',
+      airtableRecordId: airtableRecord?.id ?? null,
     })
   } catch (error) {
     console.error('Contact submission failed', error)
