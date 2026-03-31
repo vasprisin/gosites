@@ -1,5 +1,5 @@
 {
-  "savedAt": "2026-03-31T16:27:02.342Z",
+  "savedAt": "2026-03-31T23:24:12.366Z",
   "project": {
     "root": "/home/runner/workspace",
     "packageManager": "npm",
@@ -27,6 +27,7 @@
       "framer-motion": "^12.38.0",
       "lucide-react": "^1.7.0",
       "next": "^16.2.1",
+      "posthog-js": "^1.364.4",
       "react": "^19.2.4",
       "react-dom": "^19.2.4",
       "tailwind-merge": "^3.5.0",
@@ -36,14 +37,18 @@
   "recovery": {
     "summaryPath": "handoff/CURRENT_STATE.md",
     "checklist": [
-      "- [x] Confirm no previous handoff or chat transcript was saved in the workspace",
-      "- [x] Add a disk-based handoff system that future sessions can read",
-      "- [x] Add scripts to save and restore session context from the workspace",
-      "- [x] Update this file whenever major work is completed",
-      "- [x] Re-run `npm run session:save` after meaningful changes so `handoff/session-state.json` stays current",
-      "- [ ] Add the `BREVO_NEWSLETTER_LIST_ID` runtime secret so the now-wired newsletter opt-in can actually sync contacts into Brevo",
-      "- [ ] Restart Codex so the newly added `posthog` MCP server is available to the tool layer if PostHog access is still needed",
-      "- [ ] Complete the active Railway browserless login at `https://railway.com/activate` with code `DVFK-DPTT`, then investigate Railway custom-domain SSL from the re-authenticated session"
+      "- [x] Save an updated disk handoff with the real latest production and PostHog state",
+      "- [x] Keep the older recovery scripts in place",
+      "- [x] Preserve the exact partial PostHog file set already edited",
+      "- [x] Finish `FAQ.jsx`, `ContactSection.jsx`, and `EnquiryForm.jsx`",
+      "- [x] Add `scripts/setup-posthog-cro.mjs`",
+      "- [x] Run `npm run build`",
+      "- [ ] Push `NEXT_PUBLIC_POSTHOG_KEY` and `NEXT_PUBLIC_POSTHOG_HOST` to Railway production",
+      "- [ ] Redeploy Railway",
+      "- [x] Run the PostHog setup script",
+      "- [x] Delete/archive the temporary PostHog dashboard and temp insight",
+      "- [x] Verify events land in PostHog and confirm the CRO dashboard exists",
+      "- [ ] Verify the live deployed site after Railway redeploy"
     ]
   },
   "app": {
@@ -55,6 +60,7 @@
       "app/page.js"
     ],
     "componentFiles": [
+      "components/analytics/LandingAnalytics.jsx",
       "components/sections/CTABanner.jsx",
       "components/sections/ContactSection.jsx",
       "components/sections/EnquiryForm.jsx",
@@ -89,6 +95,7 @@
       "lib/content.js",
       "lib/form-submissions.js",
       "lib/motion.js",
+      "lib/posthog.js",
       "lib/utils.js"
     ]
   },
@@ -104,57 +111,59 @@
       "AIRTABLE_PAT",
       "AIRTABLE_BASE_ID",
       "AIRTABLE_TABLE_ID",
+      "NEXT_PUBLIC_POSTHOG_KEY",
+      "NEXT_PUBLIC_POSTHOG_HOST",
       "NEXT_PUBLIC_CALENDLY_URL"
     ]
   },
   "recentFiles": [
     {
-      "path": "components/sections/EnquiryForm.jsx",
-      "modifiedAt": "2026-03-31T16:26:00.503Z"
+      "path": "scripts/setup-posthog-cro.mjs",
+      "modifiedAt": "2026-03-31T23:21:50.516Z"
     },
     {
-      "path": "app/api/enquiry/route.js",
-      "modifiedAt": "2026-03-31T16:26:00.500Z"
+      "path": "components/sections/EnquiryForm.jsx",
+      "modifiedAt": "2026-03-31T23:18:37.640Z"
+    },
+    {
+      "path": "components/sections/FAQ.jsx",
+      "modifiedAt": "2026-03-31T23:18:37.640Z"
     },
     {
       "path": "components/sections/ContactSection.jsx",
-      "modifiedAt": "2026-03-31T16:26:00.500Z"
+      "modifiedAt": "2026-03-31T23:18:13.202Z"
     },
     {
-      "path": "app/api/contact/route.js",
-      "modifiedAt": "2026-03-31T16:26:00.499Z"
+      "path": "components/sections/CTABanner.jsx",
+      "modifiedAt": "2026-03-31T18:37:22.558Z"
     },
     {
-      "path": "lib/form-submissions.js",
-      "modifiedAt": "2026-03-31T16:26:00.498Z"
+      "path": "components/sections/VSL.jsx",
+      "modifiedAt": "2026-03-31T18:37:22.558Z"
     },
     {
-      "path": "components/sections/FinalCTA.jsx",
-      "modifiedAt": "2026-03-30T15:23:42.172Z"
+      "path": "components/ui/WhatsappWidget.jsx",
+      "modifiedAt": "2026-03-31T18:37:22.558Z"
+    },
+    {
+      "path": "components/sections/SocialProof.jsx",
+      "modifiedAt": "2026-03-31T18:37:22.557Z"
+    },
+    {
+      "path": "components/sections/GetStarted.jsx",
+      "modifiedAt": "2026-03-31T18:37:22.550Z"
+    },
+    {
+      "path": "components/sections/Pricing.jsx",
+      "modifiedAt": "2026-03-31T18:37:22.550Z"
     },
     {
       "path": "components/sections/Header.jsx",
-      "modifiedAt": "2026-03-29T22:14:05.778Z"
-    },
-    {
-      "path": "components/sections/Footer.jsx",
-      "modifiedAt": "2026-03-29T20:36:34.233Z"
-    },
-    {
-      "path": "components/sections/WhyDifferent.jsx",
-      "modifiedAt": "2026-03-29T20:34:45.882Z"
-    },
-    {
-      "path": "components/sections/FounderNote.jsx",
-      "modifiedAt": "2026-03-29T20:33:58.253Z"
-    },
-    {
-      "path": "lib/content.js",
-      "modifiedAt": "2026-03-29T20:32:38.582Z"
+      "modifiedAt": "2026-03-31T18:37:22.549Z"
     },
     {
       "path": "components/sections/Hero.jsx",
-      "modifiedAt": "2026-03-29T20:32:08.777Z"
+      "modifiedAt": "2026-03-31T18:37:22.548Z"
     }
   ]
 }

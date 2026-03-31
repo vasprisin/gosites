@@ -50,7 +50,13 @@ export default function TopBanner() {
 
           <motion.div variants={fadeUp}>
             <Button asChild size="sm" variant="inverted" className="shrink-0">
-              <a href={topBanner.cta.href}>
+              <a
+                href={topBanner.cta.href}
+                data-ph-event="cta_click"
+                data-ph-cta-label={topBanner.cta.label}
+                data-ph-cta-location="top_banner"
+                data-ph-cta-target={topBanner.cta.href}
+              >
                 {topBanner.cta.label}
                 <ArrowRight className="h-4 w-4" />
               </a>

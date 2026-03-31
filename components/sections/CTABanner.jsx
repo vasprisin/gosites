@@ -11,7 +11,7 @@ import { fadeUp, staggerParent, viewport } from '@/lib/motion'
 
 export default function CTABanner() {
   return (
-    <Section className="pt-0">
+    <Section id="final-cta" className="pt-0">
       <motion.div
         initial="hidden"
         whileInView="show"
@@ -30,7 +30,14 @@ export default function CTABanner() {
             </motion.div>
             <motion.div variants={fadeUp}>
               <Button asChild>
-                <a href={ctaBanner.cta.href}>
+                <a
+                  href={ctaBanner.cta.href}
+                  data-ph-event="cta_click"
+                  data-ph-cta-label={ctaBanner.cta.label}
+                  data-ph-cta-location="final_cta"
+                  data-ph-cta-target={ctaBanner.cta.href}
+                  data-ph-section="final_cta"
+                >
                   {ctaBanner.cta.label}
                   <ArrowRight className="h-4 w-4" />
                 </a>

@@ -164,7 +164,14 @@ export default function SocialProof() {
 
         <div className="flex justify-start">
           <Button asChild>
-            <a href={socialProof.cta.href}>
+            <a
+              href={socialProof.cta.href}
+              data-ph-event="cta_click"
+              data-ph-cta-label={socialProof.cta.label}
+              data-ph-cta-location="social_proof"
+              data-ph-cta-target={socialProof.cta.href}
+              data-ph-section="results"
+            >
               {socialProof.cta.label}
               <ArrowRight className="h-4 w-4" />
             </a>

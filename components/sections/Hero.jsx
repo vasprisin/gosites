@@ -13,7 +13,7 @@ import { fadeUp, scaleIn, staggerParent, viewport } from '@/lib/motion'
 
 export default function Hero() {
   return (
-    <Section className="pb-20 pt-16 sm:pt-20 lg:pt-24">
+    <Section id="hero" className="pb-20 pt-16 sm:pt-20 lg:pt-24">
       <div className="grid items-start gap-14 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.92fr)] lg:gap-14">
         <motion.div
           className="flex flex-col gap-10"
@@ -77,13 +77,29 @@ export default function Hero() {
             variants={fadeUp}
           >
             <Button asChild size="lg">
-              <a href={hero.primaryCta.href}>
+              <a
+                href={hero.primaryCta.href}
+                data-ph-event="cta_click"
+                data-ph-cta-label={hero.primaryCta.label}
+                data-ph-cta-location="hero_primary"
+                data-ph-cta-target={hero.primaryCta.href}
+                data-ph-section="hero"
+              >
                 {hero.primaryCta.label}
                 <ArrowRight className="h-4 w-4" />
               </a>
             </Button>
             <Button asChild size="lg" variant="secondary">
-              <a href={hero.secondaryCta.href}>{hero.secondaryCta.label}</a>
+              <a
+                href={hero.secondaryCta.href}
+                data-ph-event="cta_click"
+                data-ph-cta-label={hero.secondaryCta.label}
+                data-ph-cta-location="hero_secondary"
+                data-ph-cta-target={hero.secondaryCta.href}
+                data-ph-section="hero"
+              >
+                {hero.secondaryCta.label}
+              </a>
             </Button>
           </motion.div>
 

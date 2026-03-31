@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion'
 import { ArrowRight, LoaderCircle, Mail, MessageSquare } from 'lucide-react'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 
 import Button from '@/components/ui/Button'
 import Card from '@/components/ui/Card'
@@ -10,6 +10,7 @@ import Heading from '@/components/ui/Heading'
 import Section from '@/components/ui/Section'
 import { contactSection } from '@/lib/content'
 import { fadeUp, scaleIn, staggerParent, viewport } from '@/lib/motion'
+import { capturePostHogEvent } from '@/lib/posthog'
 import { cn } from '@/lib/utils'
 
 const initialForm = {
@@ -64,6 +65,40 @@ export default function ContactSection() {
   const [form, setForm] = useState(initialForm)
   const [status, setStatus] = useState('idle')
   const [error, setError] = useState('')
+  const hasTrackedStartRef = useRef(false)
+
+  function getAnalyticsProperties() {
+    return {
+      form_name: 'contact',
+      section: 'contact',
+      has_linkedin_url: Boolean(form.linkedinUrl.trim()),
+      has_website_url: Boolean(form.websiteUrl.trim()),
+      message_body_length: form.messageBody.trim().length,
+      message_title_length: form.messageTitle.trim().length,
+      subscribed: form.subscribe,
+    }
+  }
+
+  function trackFormStarted(fieldName) {
+    if (hasTrackedStartRef.current) {
+      return
+    }
+
+    hasTrackedStartRef.current = true
+    capturePostHogEvent('contact_form_started', {
+      ...getAnalyticsProperties(),
+      first_field: fieldName || 'unknown',
+    })
+  }
+
+  function handleFormFocus(event) {
+    const fieldName =
+      typeof event.target?.name === 'string' && event.target.name
+        ? event.target.name
+        : 'unknown'
+
+    trackFormStarted(fieldName)
+  }
 
   function updateField(name, value) {
     setForm((current) => ({ ...current, [name]: value }))
@@ -71,8 +106,10 @@ export default function ContactSection() {
 
   async function handleSubmit(event) {
     event.preventDefault()
+    trackFormStarted('submit')
     setError('')
     setStatus('submitting')
+    capturePostHogEvent('contact_form_submit_attempt', getAnalyticsProperties())
 
     try {
       const response = await fetch('/api/contact', {
@@ -89,14 +126,23 @@ export default function ContactSection() {
         throw new Error(data.message || 'Unable to submit message right now.')
       }
 
+      capturePostHogEvent('contact_form_submitted', {
+        ...getAnalyticsProperties(),
+        airtable_record_id: data.airtableRecordId || null,
+      })
       setStatus('submitted')
     } catch (submissionError) {
-      setStatus('idle')
-      setError(
+      const message =
         submissionError instanceof Error
           ? submissionError.message
           : 'Unable to submit message right now.'
-      )
+
+      capturePostHogEvent('contact_form_submit_failed', {
+        ...getAnalyticsProperties(),
+        error_message: message,
+      })
+      setStatus('idle')
+      setError(message)
     }
   }
 
@@ -120,7 +166,14 @@ export default function ContactSection() {
                   descriptionClassName="max-w-xl"
                 />
                 <Button asChild>
-                  <a href={contactSection.cta.href}>
+                  <a
+                    href={contactSection.cta.href}
+                    data-ph-event="cta_click"
+                    data-ph-cta-label={contactSection.cta.label}
+                    data-ph-cta-location="contact_success"
+                    data-ph-cta-target={contactSection.cta.href}
+                    data-ph-section="contact"
+                  >
                     {contactSection.cta.label}
                     <ArrowRight className="h-4 w-4" />
                   </a>
@@ -180,6 +233,11 @@ export default function ContactSection() {
                       {contactSection.description}{' '}
                       <a
                         href={contactSection.serviceRequestNote.href}
+                        data-ph-event="cta_click"
+                        data-ph-cta-label={contactSection.serviceRequestNote.label}
+                        data-ph-cta-location="contact_service_request_note"
+                        data-ph-cta-target={contactSection.serviceRequestNote.href}
+                        data-ph-section="contact"
                         className="font-semibold text-blue-600 underline decoration-blue-200 underline-offset-4 transition-colors hover:text-blue-500"
                       >
                         {contactSection.serviceRequestNote.label}
@@ -195,7 +253,11 @@ export default function ContactSection() {
               className="rounded-[2rem] border border-slate-200 bg-white p-5 shadow-[0_30px_100px_-56px_rgba(15,23,42,0.16)] sm:p-6"
               variants={scaleIn}
             >
-              <form className="space-y-5" onSubmit={handleSubmit}>
+              <form
+                className="space-y-5"
+                onFocusCapture={handleFormFocus}
+                onSubmit={handleSubmit}
+              >
                 <div className="grid gap-5 sm:grid-cols-2">
                   <Field label="First name" required>
                     <Input

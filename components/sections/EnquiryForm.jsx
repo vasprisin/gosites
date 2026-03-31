@@ -1,9 +1,10 @@
 'use client'
 
 import { ArrowRight, CheckCircle2, LoaderCircle } from 'lucide-react'
-import { useMemo, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 import Button from '@/components/ui/Button'
+import { capturePostHogEvent } from '@/lib/posthog'
 import { cn } from '@/lib/utils'
 
 const situationOptions = [
@@ -85,13 +86,76 @@ export default function EnquiryForm() {
   const [status, setStatus] = useState('idle')
   const [error, setError] = useState('')
   const [submittedTimeline, setSubmittedTimeline] = useState('')
+  const hasTrackedStartRef = useRef(false)
+  const hasTrackedCalendlyRef = useRef(false)
+  const completedStepsRef = useRef(new Set())
 
-  const showCalendly = useMemo(
-    () => quickStartTimelines.has(submittedTimeline),
-    [submittedTimeline]
-  )
+  const showCalendly = quickStartTimelines.has(submittedTimeline)
 
   const calendlyUrl = process.env.NEXT_PUBLIC_CALENDLY_URL
+
+  useEffect(() => {
+    if (!showCalendly || status !== 'submitted' || hasTrackedCalendlyRef.current) {
+      return
+    }
+
+    hasTrackedCalendlyRef.current = true
+    capturePostHogEvent('calendly_prompt_shown', {
+      form_name: 'service_request',
+      section: 'contact',
+      calendly_url_configured: Boolean(calendlyUrl),
+      start_timeline: submittedTimeline,
+    })
+  }, [calendlyUrl, showCalendly, status, submittedTimeline])
+
+  function getAnalyticsProperties() {
+    return {
+      form_name: 'service_request',
+      section: 'contact',
+      has_linkedin_url: Boolean(form.linkedinUrl.trim()),
+      has_website_url: Boolean(form.websiteUrl.trim()),
+      situation: form.situation || undefined,
+      start_timeline: form.startTimeline || undefined,
+      subscribed: form.subscribe,
+    }
+  }
+
+  function trackFormStarted(entryPoint) {
+    if (hasTrackedStartRef.current) {
+      return
+    }
+
+    hasTrackedStartRef.current = true
+    capturePostHogEvent('service_request_started', {
+      ...getAnalyticsProperties(),
+      entry_point: entryPoint || 'unknown',
+    })
+  }
+
+  function trackValidationError(currentStep, message) {
+    capturePostHogEvent('service_request_validation_error', {
+      ...getAnalyticsProperties(),
+      error_message: message,
+      step_number: currentStep,
+    })
+  }
+
+  function trackStepCompleted(currentStep) {
+    if (completedStepsRef.current.has(currentStep)) {
+      return
+    }
+
+    completedStepsRef.current.add(currentStep)
+    capturePostHogEvent('service_request_step_completed', {
+      ...getAnalyticsProperties(),
+      completed_step: currentStep,
+      next_step: currentStep < 3 ? currentStep + 1 : 'submitted',
+    })
+  }
+
+  function handleFormFocus() {
+    trackFormStarted(`step_${step}`)
+  }
 
   function updateField(name, value) {
     setForm((current) => ({ ...current, [name]: value }))
@@ -122,13 +186,16 @@ export default function EnquiryForm() {
   }
 
   function goNext() {
+    trackFormStarted(`step_${step}_continue`)
     const nextError = validateStep(step)
     if (nextError) {
       setError(nextError)
+      trackValidationError(step, nextError)
       return
     }
 
     setError('')
+    trackStepCompleted(step)
     setStep((current) => Math.min(current + 1, 3))
   }
 
@@ -139,15 +206,19 @@ export default function EnquiryForm() {
 
   async function handleSubmit(event) {
     event.preventDefault()
+    trackFormStarted('submit')
 
     const nextError = validateStep(3)
     if (nextError) {
       setError(nextError)
+      trackValidationError(3, nextError)
       return
     }
 
     setStatus('submitting')
     setError('')
+    trackStepCompleted(3)
+    capturePostHogEvent('service_request_submit_attempt', getAnalyticsProperties())
 
     try {
       const response = await fetch('/api/enquiry', {
@@ -173,15 +244,25 @@ export default function EnquiryForm() {
         throw new Error(data.message || 'Unable to submit enquiry right now.')
       }
 
+      capturePostHogEvent('service_request_submitted', {
+        ...getAnalyticsProperties(),
+        airtable_record_id: data.airtableRecordId || null,
+        show_calendly_prompt: quickStartTimelines.has(form.startTimeline),
+      })
       setSubmittedTimeline(form.startTimeline)
       setStatus('submitted')
     } catch (submissionError) {
-      setStatus('idle')
-      setError(
+      const message =
         submissionError instanceof Error
           ? submissionError.message
           : 'Unable to submit enquiry right now.'
-      )
+
+      capturePostHogEvent('service_request_submit_failed', {
+        ...getAnalyticsProperties(),
+        error_message: message,
+      })
+      setStatus('idle')
+      setError(message)
     }
   }
 
@@ -228,7 +309,11 @@ export default function EnquiryForm() {
   }
 
   return (
-    <form className="space-y-6" onSubmit={handleSubmit}>
+    <form
+      className="space-y-6"
+      onFocusCapture={handleFormFocus}
+      onSubmit={handleSubmit}
+    >
       <div
         className="grid grid-cols-3 gap-2"
         aria-label={`Progress step ${step} of 3`}

@@ -8,6 +8,10 @@ export default function WhatsappWidget() {
       target="_blank"
       rel="noreferrer"
       aria-label="Chat with GoSites on WhatsApp"
+      data-ph-event="whatsapp_click"
+      data-ph-location="floating_widget"
+      data-ph-contact-method="whatsapp"
+      data-ph-contact-target={WHATSAPP_LINK}
       className="fixed bottom-5 right-5 z-[70] flex items-center gap-3 rounded-full border border-[#25D366]/20 bg-white px-3 py-3 shadow-[0_24px_80px_-32px_rgba(15,23,42,0.28)] transition-transform duration-300 hover:-translate-y-0.5"
     >
       <span className="flex h-11 w-11 items-center justify-center rounded-full bg-[#25D366]/12">

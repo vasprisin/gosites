@@ -1,3 +1,4 @@
+import LandingAnalytics from '@/components/analytics/LandingAnalytics'
 import CTABanner from '@/components/sections/CTABanner'
 import ContactSection from '@/components/sections/ContactSection'
 import FAQ from '@/components/sections/FAQ'
@@ -17,6 +18,7 @@ import WhyDifferent from '@/components/sections/WhyDifferent'
 export default function Page() {
   return (
     <div className="relative isolate overflow-x-hidden">
+      <LandingAnalytics />
       <div className="pointer-events-none absolute inset-x-0 top-[-12rem] -z-10 h-[44rem] bg-[radial-gradient(circle_at_top,rgba(56,189,248,0.16),transparent_38%)]" />
       <div className="pointer-events-none absolute left-1/2 top-[24rem] -z-10 h-[26rem] w-[26rem] -translate-x-1/2 rounded-full bg-sky-200/60 blur-[120px]" />
       <div className="pointer-events-none absolute right-[-6rem] top-[64rem] -z-10 h-[22rem] w-[22rem] rounded-full bg-amber-200/50 blur-[120px]" />

@@ -63,6 +63,10 @@ export default function Header() {
             <div className="flex items-center justify-between gap-4">
               <a
                 href="#top"
+                data-ph-event="nav_click"
+                data-ph-nav-label={site.name}
+                data-ph-nav-location="header_logo"
+                data-ph-nav-target="#top"
                 className="group flex min-w-0 items-center gap-3 pr-2 sm:gap-4"
               >
                 <motion.span
@@ -97,6 +101,10 @@ export default function Header() {
                     <motion.a
                       key={item.href}
                       href={item.href}
+                      data-ph-event="nav_click"
+                      data-ph-nav-label={item.label}
+                      data-ph-nav-location="header_desktop"
+                      data-ph-nav-target={item.href}
                       style={{
                         paddingLeft: navItemPaddingX,
                         paddingRight: navItemPaddingX,
@@ -116,7 +124,15 @@ export default function Header() {
                 className="hidden items-center lg:flex"
               >
                 <Button asChild className="px-4">
-                  <a href="#pricing">Start Now</a>
+                  <a
+                    href="#pricing"
+                    data-ph-event="cta_click"
+                    data-ph-cta-label="Start Now"
+                    data-ph-cta-location="header_desktop"
+                    data-ph-cta-target="#pricing"
+                  >
+                    Start Now
+                  </a>
                 </Button>
               </motion.div>
 
@@ -149,6 +165,10 @@ export default function Header() {
                       key={item.href}
                       href={item.href}
                       onClick={() => setOpen(false)}
+                      data-ph-event="nav_click"
+                      data-ph-nav-label={item.label}
+                      data-ph-nav-location="header_mobile"
+                      data-ph-nav-target={item.href}
                       className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3.5 text-lg font-semibold text-slate-700 transition-colors hover:border-slate-300 hover:bg-white"
                     >
                       {item.label}
@@ -156,7 +176,14 @@ export default function Header() {
                   ))}
                   <div className="flex flex-col gap-3 pt-2">
                     <Button asChild>
-                      <a href="#pricing" onClick={() => setOpen(false)}>
+                      <a
+                        href="#pricing"
+                        onClick={() => setOpen(false)}
+                        data-ph-event="cta_click"
+                        data-ph-cta-label="Start Now"
+                        data-ph-cta-location="header_mobile"
+                        data-ph-cta-target="#pricing"
+                      >
                         Start Now
                       </a>
                     </Button>

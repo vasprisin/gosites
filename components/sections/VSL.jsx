@@ -29,7 +29,14 @@ export default function VSL() {
             description={vslSection.description}
           />
           <Button asChild>
-            <a href={vslSection.cta.href}>
+            <a
+              href={vslSection.cta.href}
+              data-ph-event="cta_click"
+              data-ph-cta-label={vslSection.cta.label}
+              data-ph-cta-location="vsl"
+              data-ph-cta-target={vslSection.cta.href}
+              data-ph-section="vsl"
+            >
               {vslSection.cta.label}
               <ArrowRight className="h-4 w-4" />
             </a>

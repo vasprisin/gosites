@@ -63,13 +63,29 @@ export default function GetStarted() {
 
         <div className="flex flex-col gap-3 sm:flex-row">
           <Button asChild>
-            <a href={getStarted.primaryCta.href}>
+            <a
+              href={getStarted.primaryCta.href}
+              data-ph-event="cta_click"
+              data-ph-cta-label={getStarted.primaryCta.label}
+              data-ph-cta-location="get_started_primary"
+              data-ph-cta-target={getStarted.primaryCta.href}
+              data-ph-section="get_started"
+            >
               {getStarted.primaryCta.label}
               <ArrowRight className="h-4 w-4" />
             </a>
           </Button>
           <Button asChild variant="secondary">
-            <a href={getStarted.secondaryCta.href}>{getStarted.secondaryCta.label}</a>
+            <a
+              href={getStarted.secondaryCta.href}
+              data-ph-event="cta_click"
+              data-ph-cta-label={getStarted.secondaryCta.label}
+              data-ph-cta-location="get_started_secondary"
+              data-ph-cta-target={getStarted.secondaryCta.href}
+              data-ph-section="get_started"
+            >
+              {getStarted.secondaryCta.label}
+            </a>
           </Button>
         </div>
       </motion.div>

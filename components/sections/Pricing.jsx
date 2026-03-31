@@ -112,7 +112,15 @@ export default function Pricing() {
 
                   <div className="mt-10">
                     <Button asChild size="lg" className="w-full">
-                      <a href={plan.cta.href}>
+                      <a
+                        href={plan.cta.href}
+                        data-ph-event="cta_click"
+                        data-ph-cta-label={plan.cta.label}
+                        data-ph-cta-location={`pricing_${plan.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`}
+                        data-ph-cta-target={plan.cta.href}
+                        data-ph-plan-name={plan.name}
+                        data-ph-section="pricing"
+                      >
                         {plan.cta.label}
                         <ArrowRight className="h-4 w-4" />
                       </a>
