@@ -1,6 +1,7 @@
 import {
   assertNotSkipped,
   createAirtableSubmission,
+  isBlockedContactError,
   isValidEmail,
   isValidUrl,
   logOptionalStepResult,
@@ -114,6 +115,17 @@ export async function POST(request) {
     })
   } catch (error) {
     console.error('Contact submission failed', error)
+
+    if (isBlockedContactError(error)) {
+      return json(
+        {
+          ok: false,
+          message:
+            'We could not send the confirmation email because this address is blocked after an earlier bounce. Please use a different address or contact us directly.',
+        },
+        { status: 400 }
+      )
+    }
 
     return json(
       { ok: false, message: 'Unable to submit message right now.' },

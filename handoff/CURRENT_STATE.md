@@ -1,6 +1,6 @@
 # Current State
 
-Last updated: 2026-03-31 UTC
+Last updated: 2026-04-01 UTC
 
 ## Project Snapshot
 
@@ -32,7 +32,7 @@ Last updated: 2026-03-31 UTC
   - service: `gosites.uk`
   - service ID: `57677bca-a9bc-48db-a15e-c991a0a18502`
 - Current live deployment that was verified earlier:
-  - deployment ID: `5cd672f7-a76d-43c4-86b1-8b9edef0148f`
+  - deployment ID: `d9aa5cf1-aaaa-4fe9-aa04-2414b5b1b0c3`
 - Railway production vars already pushed earlier:
   - `AIRTABLE_PAT`
   - `AIRTABLE_BASE_ID=appuAvzh91hfclBCM`
@@ -41,17 +41,26 @@ Last updated: 2026-03-31 UTC
   - `BREVO_SENDER`
   - `BREVO_SENDER_EMAIL`
   - `BREVO_SENDER_NAME=GoSites`
-- `BREVO_NEWSLETTER_LIST_ID` is still intentionally missing.
+  - `BREVO_NEWSLETTER_LIST_ID=11`
+  - `NEXT_PUBLIC_POSTHOG_KEY`
+  - `NEXT_PUBLIC_POSTHOG_HOST=https://us.i.posthog.com`
 
 ## Backend Integration State
 
 - Airtable writes are working in production.
 - Brevo auto-reply emails are working in production.
-- Newsletter sync to Brevo is wired in code but currently skips because `BREVO_NEWSLETTER_LIST_ID` is unset.
+- Newsletter sync to Brevo is active in production for submissions where `subscribe` is checked.
+- Brevo list already created:
+  - folder: `GoSites` (`10`)
+  - list: `GoSites Newsletter` (`11`)
 - Backend was hardened so a 200 response now means:
   - Airtable write succeeded
   - required Brevo auto-reply succeeded
 - Optional newsletter sync remains non-blocking.
+- On `2026-04-01`, a missing service-request confirmation email was traced to a Brevo transactional suppression on `priyanshu@dolta.io` from an older hard bounce.
+- That recipient was unblocked in Brevo on `2026-04-01`.
+- Code now preflights Brevo blocked contacts before sending the auto-reply and returns a user-facing `400` if the recipient is suppressed.
+- Manual owner steps for Brevo now live in `handoff/BREVO_NEWSLETTER_PLAYBOOK.md`.
 
 ### Files already changed for that backend work
 
@@ -151,9 +160,12 @@ Last updated: 2026-03-31 UTC
 
 ## PostHog Implementation Status
 
-The requested PostHog code work is now finished locally and the PostHog project objects have been created.
+The requested PostHog code work is finished in repo and the PostHog project objects have been created.
 
-### What is edited locally now
+- Current commit carrying that work:
+  - `4a54950 feat: add PostHog landing analytics and CRO dashboard setup`
+
+### Files added or modified by that work
 
 Installed package:
 
@@ -257,13 +269,17 @@ Modified files:
 
 ## Current Git Working Tree
 
-At the moment of this update, `git status --short` includes the PostHog worktree changes plus the handoff updates.
+- The PostHog analytics work referenced above is committed at `4a54950`.
+- The current working tree now includes:
+  - handoff refresh files
+  - Brevo blocked-recipient guard changes in `app/api/contact/route.js`, `app/api/enquiry/route.js`, and `lib/form-submissions.js`
 
 ## Important Verification Status
 
 - `npm install posthog-js` completed successfully
-- `npm run build` completed successfully on `2026-03-31`
+- `npm run build` completed successfully on `2026-03-31` and again on `2026-04-01`
 - `node scripts/setup-posthog-cro.mjs` completed successfully and now re-runs idempotently
+- `npm run build` also completed successfully after the `2026-04-01` Brevo blocked-recipient guard changes
 - synthetic smoke events were sent directly to PostHog capture using the project public token
 - event ingestion was verified with `POST /api/projects/362572/query/` using HogQL
   - counts observed within the last 30 minutes:

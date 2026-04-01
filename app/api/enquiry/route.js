@@ -1,6 +1,7 @@
 import {
   assertNotSkipped,
   createAirtableSubmission,
+  isBlockedContactError,
   isValidEmail,
   isValidUrl,
   logOptionalStepResult,
@@ -42,9 +43,12 @@ export async function POST(request) {
       )
     }
 
-    if (!isValidUrl(linkedinUrl)) {
+    if (linkedinUrl && !linkedinUrl.toLowerCase().includes('linkedin')) {
       return json(
-        { ok: false, message: 'Please enter a valid LinkedIn URL.' },
+        {
+          ok: false,
+          message: "Please enter a LinkedIn value that contains 'linkedin'.",
+        },
         { status: 400 }
       )
     }
@@ -136,6 +140,17 @@ export async function POST(request) {
     })
   } catch (error) {
     console.error('Service request submission failed', error)
+
+    if (isBlockedContactError(error)) {
+      return json(
+        {
+          ok: false,
+          message:
+            'We could not send the confirmation email because this address is blocked after an earlier bounce. Please use a different address or contact us directly.',
+        },
+        { status: 400 }
+      )
+    }
 
     return json(
       { ok: false, message: 'Unable to submit service request right now.' },

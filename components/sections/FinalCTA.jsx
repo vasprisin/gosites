@@ -5,6 +5,7 @@ import { ArrowRight, CheckCircle2, LoaderCircle } from 'lucide-react'
 import { useMemo, useState } from 'react'
 
 import Button from '@/components/ui/Button'
+import CalendlyInlineWidget from '@/components/ui/CalendlyInlineWidget'
 import Card from '@/components/ui/Card'
 import Heading from '@/components/ui/Heading'
 import Section from '@/components/ui/Section'
@@ -30,6 +31,8 @@ const timelineOptions = [
 ]
 
 const quickStartTimelines = new Set(['right-away', 'within-a-week'])
+const DEFAULT_CALENDLY_URL =
+  'https://calendly.com/priyanshusingh/gosites-discovery'
 
 const initialForm = {
   firstName: '',
@@ -122,7 +125,8 @@ export default function FinalCTA() {
     [submittedTimeline]
   )
 
-  const calendlyUrl = process.env.NEXT_PUBLIC_CALENDLY_URL
+  const calendlyUrl =
+    process.env.NEXT_PUBLIC_CALENDLY_URL || DEFAULT_CALENDLY_URL
 
   function updateField(name, value) {
     setForm((current) => ({ ...current, [name]: value }))
@@ -300,24 +304,14 @@ export default function FinalCTA() {
                       </div>
                     </div>
 
-                    {showCalendly && calendlyUrl ? (
+                    {showCalendly ? (
                       <div className="space-y-4">
                         <p className="text-sm text-slate-600">
                           Book your call:
                         </p>
                         <div className="overflow-hidden rounded-[1.5rem] border border-slate-200 bg-white">
-                          <iframe
-                            title="Calendly booking"
-                            src={calendlyUrl}
-                            className="h-[700px] w-full"
-                          />
+                          <CalendlyInlineWidget url={calendlyUrl} />
                         </div>
-                      </div>
-                    ) : null}
-
-                    {showCalendly && !calendlyUrl ? (
-                      <div className="rounded-[1.5rem] border border-amber-200 bg-amber-50 p-5 text-sm leading-7 text-amber-800">
-                        Add `NEXT_PUBLIC_CALENDLY_URL` to embed your Calendly booking page here.
                       </div>
                     ) : null}
                   </div>

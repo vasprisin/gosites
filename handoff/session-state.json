@@ -1,5 +1,5 @@
 {
-  "savedAt": "2026-03-31T23:24:12.366Z",
+  "savedAt": "2026-04-01T14:15:37.998Z",
   "project": {
     "root": "/home/runner/workspace",
     "packageManager": "npm",
@@ -85,6 +85,7 @@
       "components/sections/WhyUs.jsx",
       "components/ui/Badge.jsx",
       "components/ui/Button.jsx",
+      "components/ui/CalendlyInlineWidget.jsx",
       "components/ui/Card.jsx",
       "components/ui/Container.jsx",
       "components/ui/Heading.jsx",
@@ -118,12 +119,32 @@
   },
   "recentFiles": [
     {
-      "path": "scripts/setup-posthog-cro.mjs",
-      "modifiedAt": "2026-03-31T23:21:50.516Z"
+      "path": "lib/form-submissions.js",
+      "modifiedAt": "2026-04-01T14:12:36.662Z"
+    },
+    {
+      "path": "components/sections/FinalCTA.jsx",
+      "modifiedAt": "2026-04-01T13:54:06.288Z"
     },
     {
       "path": "components/sections/EnquiryForm.jsx",
-      "modifiedAt": "2026-03-31T23:18:37.640Z"
+      "modifiedAt": "2026-04-01T13:53:59.083Z"
+    },
+    {
+      "path": "components/ui/CalendlyInlineWidget.jsx",
+      "modifiedAt": "2026-04-01T13:51:57.134Z"
+    },
+    {
+      "path": "app/api/enquiry/route.js",
+      "modifiedAt": "2026-04-01T13:48:39.335Z"
+    },
+    {
+      "path": "app/api/contact/route.js",
+      "modifiedAt": "2026-04-01T13:45:21.724Z"
+    },
+    {
+      "path": "scripts/setup-posthog-cro.mjs",
+      "modifiedAt": "2026-03-31T23:21:50.516Z"
     },
     {
       "path": "components/sections/FAQ.jsx",
@@ -144,26 +165,6 @@
     {
       "path": "components/ui/WhatsappWidget.jsx",
       "modifiedAt": "2026-03-31T18:37:22.558Z"
-    },
-    {
-      "path": "components/sections/SocialProof.jsx",
-      "modifiedAt": "2026-03-31T18:37:22.557Z"
-    },
-    {
-      "path": "components/sections/GetStarted.jsx",
-      "modifiedAt": "2026-03-31T18:37:22.550Z"
-    },
-    {
-      "path": "components/sections/Pricing.jsx",
-      "modifiedAt": "2026-03-31T18:37:22.550Z"
-    },
-    {
-      "path": "components/sections/Header.jsx",
-      "modifiedAt": "2026-03-31T18:37:22.549Z"
-    },
-    {
-      "path": "components/sections/Hero.jsx",
-      "modifiedAt": "2026-03-31T18:37:22.548Z"
     }
   ]
 }

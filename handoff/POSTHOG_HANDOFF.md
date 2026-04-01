@@ -1,10 +1,10 @@
 # PostHog Handoff
 
-Saved on: 2026-03-31 UTC
+Saved on: 2026-04-01 UTC
 
 ## Status
 
-The PostHog implementation is complete in code and mostly complete in PostHog itself.
+The PostHog implementation is complete in code, committed in repo, configured in Railway, and deployed on the live site.
 
 Completed:
 
@@ -18,12 +18,15 @@ Completed:
 - saved insights created and attached
 - old sample/temp dashboard objects archived
 - synthetic smoke events captured and verified with HogQL
+- Railway production env vars pushed:
+  - `NEXT_PUBLIC_POSTHOG_KEY`
+  - `NEXT_PUBLIC_POSTHOG_HOST=https://us.i.posthog.com`
+- Railway redeploy completed successfully
+- live bundle verification confirmed PostHog host config and tracked event names are present on `https://gosites.uk`
 
-Still blocked:
+Still pending:
 
-- Railway production env vars for the frontend have not been pushed in this runtime
-- Railway redeploy has not happened yet
-- live browser verification after deploy is still pending
+- full browser-session verification from this Codex runtime is still limited by missing Chromium system libraries
 
 ## Exact PostHog State
 
@@ -79,14 +82,18 @@ What worked:
 
 ## Local Files
 
-Added:
+Current commit:
+
+- `4a54950 feat: add PostHog landing analytics and CRO dashboard setup`
+
+Added in repo:
 
 - `instrumentation-client.js`
 - `lib/posthog.js`
 - `components/analytics/LandingAnalytics.jsx`
 - `scripts/setup-posthog-cro.mjs`
 
-Modified:
+Modified in repo:
 
 - `.env.example`
 - `app/page.js`
@@ -148,40 +155,15 @@ Modified:
 
 These were synthetic smoke events, not live deployed frontend traffic.
 
-## Runtime Vars Still Needed For Deploy
+## Current Live Deploy Notes
 
-Need to set on Railway production before redeploy:
-
-- `NEXT_PUBLIC_POSTHOG_KEY`
-- `NEXT_PUBLIC_POSTHOG_HOST`
-
-Use:
-
-- public project token from PostHog project `362572`
-- host `https://us.i.posthog.com`
-
-Do not store the token in this handoff file.
-
-## Current Blocker
-
-Railway CLI is not authenticated in this runtime.
-
-Observed now:
-
-- `env -u RAILWAY_API_TOKEN railway whoami` -> `Unauthorized. Please login with railway login`
-- only `RAILWAY_API_TOKEN` exists in env, and it is still the broken token from the earlier SOP
-
-That means deploy steps are blocked until Railway browserless login is completed again.
+- Railway production has PostHog env vars set.
+- The live site bundle on `https://gosites.uk` includes the PostHog host config and event names.
+- A successful Railway deployment was verified after the env push.
 
 ## Resume Order
 
 1. Read `handoff/CURRENT_STATE.md`.
 2. Run `npm run session:restore`.
-3. Re-auth Railway:
-   - `env -u RAILWAY_API_TOKEN railway login --browserless`
-4. Push:
-   - `NEXT_PUBLIC_POSTHOG_KEY`
-   - `NEXT_PUBLIC_POSTHOG_HOST=https://us.i.posthog.com`
-5. Redeploy Railway.
-6. Open the deployed site and verify real frontend traffic lands in PostHog.
-7. Re-run `node scripts/setup-posthog-cro.mjs` only if you want to confirm idempotency or refresh the saved objects.
+3. If you want final browser-event confirmation, open the live site in a real browser and verify events appear in PostHog live events.
+4. Re-run `node scripts/setup-posthog-cro.mjs` only if you want to refresh the dashboard or confirm idempotency.
