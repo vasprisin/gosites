@@ -66,7 +66,7 @@ export default function Pricing() {
                     </p>
                   </div>
 
-                  <div className="mt-8 rounded-[1.5rem] border border-slate-200 bg-white p-4">
+                  <div className="mt-8 rounded-[1.5rem] border border-slate-300 bg-white p-4">
                     <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">
                       Pricing
                     </p>

@@ -42,7 +42,7 @@ export default function TopBanner() {
               <CountdownItem label="Sec" value={timeLeft.seconds} />
             </div>
 
-            <p className="text-center text-base font-medium leading-7 sm:text-lg lg:max-w-[46rem] lg:text-left">
+            <p className="max-w-[18rem] text-center text-[0.9rem] font-medium leading-6 sm:max-w-none sm:text-base sm:leading-7 lg:max-w-[46rem] lg:text-left lg:text-lg">
               <span className="font-bold text-white">{emphasis}</span>
               {restText ? ` - ${restText}` : ''}
             </p>

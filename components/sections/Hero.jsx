@@ -67,7 +67,7 @@ export default function Hero() {
               size="hero"
               title={hero.title}
               description={hero.description}
-              titleClassName="max-w-4xl text-[2.9rem] leading-[0.9] sm:text-[3.6rem] lg:text-[4.35rem]"
+              titleClassName="max-w-[11ch] text-[1.95rem] leading-[0.96] tracking-[-0.06em] sm:max-w-4xl sm:text-[3.45rem] sm:leading-[0.92] lg:text-[4.35rem] lg:leading-[0.9]"
               descriptionClassName="max-w-2xl"
             />
           </motion.div>

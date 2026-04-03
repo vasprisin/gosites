@@ -1,6 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
+import Image from 'next/image'
 
 import Container from '@/components/ui/Container'
 import { footerGroups, footerDisclaimer, site, socialLinks } from '@/lib/content'
@@ -28,9 +29,15 @@ export default function Footer() {
           <div className="grid gap-10 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:items-end">
             <motion.div variants={fadeUp} className="space-y-5">
               <div className="space-y-3">
-                <span className="block font-display text-[2rem] tracking-[-0.04em] text-slate-950 sm:text-[2.2rem]">
-                  {site.name}
-                </span>
+                <div className="max-w-[15rem] sm:max-w-[17rem]">
+                  <Image
+                    src="/brand/gosites-logo-long.png"
+                    alt={site.name}
+                    width={1948}
+                    height={431}
+                    className="h-auto w-full object-contain"
+                  />
+                </div>
                 <p className="max-w-md text-[1.05rem] leading-8 text-slate-700">
                   {site.description}
                 </p>
@@ -96,7 +103,7 @@ export default function Footer() {
             <p className="text-lg font-bold tracking-[-0.01em] text-slate-950">
               {site.madeIn}
             </p>
-            <div className="mx-auto mt-3 max-w-3xl rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
+            <div className="mx-auto mt-3 max-w-3xl rounded-2xl border border-slate-300 bg-slate-50 px-4 py-3">
               <p className="text-xs font-bold uppercase tracking-[0.2em] text-slate-600">
                 Disclaimer
               </p>

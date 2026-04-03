@@ -7,9 +7,9 @@ const cardVariants = cva(
   {
     variants: {
       tone: {
-        default: 'border-slate-200 bg-white/95',
-        muted: 'border-slate-200 bg-slate-50/90',
-        accent: 'border-sky-200 bg-gradient-to-b from-sky-50 via-white to-amber-50/40',
+        default: 'border-slate-300 bg-white/95',
+        muted: 'border-slate-300 bg-slate-50/90',
+        accent: 'border-sky-300 bg-gradient-to-b from-sky-50 via-white to-amber-50/40',
       },
     },
     defaultVariants: {
